@@ -17,12 +17,9 @@ class UserLogin(BaseModel):
     username: str 
     password: str 
     
-class UserResponseId(BaseModel):
-    id: str 
-    
 class UserResponse(BaseModel):
-    status: str
-    user: UserResponseId
+    id: str 
+    username: str 
     
 
     
