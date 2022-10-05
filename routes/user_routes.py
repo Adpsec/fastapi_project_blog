@@ -11,7 +11,7 @@ userRouter = APIRouter(
 conn = getConnection()
 
 def verifyUser(username):
-    userFounded = conn.local.user.find_one({"username": username})
+    userFounded = conn.BlogWebsite.user.find_one({"username": username})
     if userFounded:
         return True
     else:
@@ -26,8 +26,8 @@ def createUser(user: User):
     try:
         userStatus = verifyUser(newUser['username'])
         if userStatus:
-            id = conn.local.user.insert_one(newUser).inserted_id
-            user = conn.local.user.find_one({"_id": id})
+            id = conn.BlogWebsite.user.insert_one(newUser).inserted_id
+            user = conn.BlogWebsite.user.find_one({"_id": id})
             return {"message": "User created", "User": userEntity(user)}
         else:
             return {"message:" "User already exist"}    
@@ -37,4 +37,4 @@ def createUser(user: User):
 
 @userRouter.get("/user/{username}", response_model=UserResponse, tags=['Users'])
 def getUserByUsername(username: str):
-    return userEntity(conn.local.user.find_one({"username": username}))
+    return userEntity(conn.BlogWebsite.user.find_one({"username": username}))
