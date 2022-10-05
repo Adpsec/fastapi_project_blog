@@ -18,7 +18,7 @@ def verifyUser(username):
         return False
 
 @userRouter.post("/user", response_model=User, tags=['Users'])
-def createUser(user: User):
+async def createUser(user: User):
     newUser = dict(user) 
     newUser['password'] = cypherPassword(newUser['password'])
     del newUser['id']
@@ -26,8 +26,8 @@ def createUser(user: User):
     try:
         userStatus = verifyUser(newUser['username'])
         if userStatus:
-            id = conn.BlogWebsite.user.insert_one(newUser).inserted_id
-            user = conn.BlogWebsite.user.find_one({"_id": id})
+            id = await conn.BlogWebsite.user.insert_one(newUser).inserted_id
+            user = await conn.BlogWebsite.user.find_one({"_id": id})
             return {"message": "User created", "User": userEntity(user)}
         else:
             return {"message:" "User already exist"}    
@@ -36,5 +36,5 @@ def createUser(user: User):
     
 
 @userRouter.get("/user/{username}", response_model=UserResponse, tags=['Users'])
-def getUserByUsername(username: str):
-    return userEntity(conn.BlogWebsite.user.find_one({"username": username}))
+async def getUserByUsername(username: str):
+    return userEntity(await conn.BlogWebsite.user.find_one({"username": username}))
